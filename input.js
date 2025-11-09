@@ -81,11 +81,9 @@ export default class InputHandler {
             const rad = (this.rotation % 360) * (Math.PI / 180); // angle in radians
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
-            // We rotate the coordinate system, not the vector.
-            // A swipe right on screen (positive dx) should move in grid's positive X direction.
-            // A swipe down on screen (positive dy) should move in grid's positive Y direction.
+            // This rotates the swipe vector by -rotation to align it with the grid's coordinate system.
             const adjustedDx = dx * cos + dy * sin;
-            const adjustedDy = -dx * sin + dy * cos;
+            const adjustedDy = dy * cos - dx * sin;
 
             // A swipe has been detected, determine direction
             let endRow, endCol;
