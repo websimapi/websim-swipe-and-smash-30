@@ -50,13 +50,33 @@ function getOrientationRotation(orientation) {
     }
 }
 
-function getIndicatorPosition(orientation) {
+function getIndicatorPositions(orientation) {
     switch (orientation) {
-        case 'portrait-primary': return { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' };
-        case 'landscape-primary': return { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' };
-        case 'portrait-secondary': return { bottom: '-5px', right: '-5px', top: 'auto', left: 'auto' };
-        case 'landscape-secondary': return { bottom: '-5px', left: '-5px', top: 'auto', right: 'auto' };
-        default: return { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' };
+        case 'portrait-primary': // Top edge
+            return {
+                left: { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' },
+                right: { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' }
+            };
+        case 'landscape-primary': // Right edge
+            return {
+                left: { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' },
+                right: { bottom: '-5px', right: '-5px', top: 'auto', left: 'auto' }
+            };
+        case 'portrait-secondary': // Bottom edge
+            return {
+                left: { bottom: '-5px', right: '-5px', top: 'auto', left: 'auto' },
+                right: { bottom: '-5px', left: '-5px', top: 'auto', right: 'auto' }
+            };
+        case 'landscape-secondary': // Left edge
+            return {
+                left: { bottom: '-5px', left: '-5px', top: 'auto', right: 'auto' },
+                right: { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' }
+            };
+        default: // Fallback to top edge
+            return {
+                left: { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' },
+                right: { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' }
+            };
     }
 }
 
@@ -152,8 +172,8 @@ class Game {
         if (this.currentOrientation === newOrientation) return;
         this.currentOrientation = newOrientation;
         
-        const pos = getIndicatorPosition(newOrientation);
-        Object.assign(this.orientationIndicator.style, pos);
+        const positions = getIndicatorPositions(this.requiredOrientation);
+        Object.assign(this.orientationIndicator.style, positions.left);
 
         if (this.isRecordingStarted) {
             recorder.recordAction({ type: 'currentOrientationChange', orientation: newOrientation });
@@ -177,8 +197,10 @@ class Game {
         this.requiredOrientation = possibleOrientations[Math.floor(Math.random() * possibleOrientations.length)];
         this.requiredOrientationIndicator.style.backgroundColor = getOrientationColor(this.requiredOrientation);
         
-        const requiredPos = getIndicatorPosition(this.requiredOrientation);
-        Object.assign(this.requiredOrientationIndicator.style, requiredPos);
+        const positions = getIndicatorPositions(this.requiredOrientation);
+        Object.assign(this.requiredOrientationIndicator.style, positions.right);
+        // Also update the current indicator's position relative to the new required orientation
+        Object.assign(this.orientationIndicator.style, positions.left);
 
         if (this.isRecordingStarted) {
             recorder.recordAction({ type: 'orientationChange', orientation: this.requiredOrientation });

@@ -24,13 +24,33 @@ function getOrientationRotation(orientation) {
     }
 }
 
-function getIndicatorPosition(orientation) {
+function getIndicatorPositions(orientation) {
     switch (orientation) {
-        case 'portrait-primary': return { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' };
-        case 'landscape-primary': return { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' };
-        case 'portrait-secondary': return { bottom: '-5px', right: '-5px', top: 'auto', left: 'auto' };
-        case 'landscape-secondary': return { bottom: '-5px', left: '-5px', top: 'auto', right: 'auto' };
-        default: return { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' };
+        case 'portrait-primary': // Top edge
+            return {
+                left: { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' },
+                right: { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' }
+            };
+        case 'landscape-primary': // Right edge
+            return {
+                left: { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' },
+                right: { bottom: '-5px', right: '-5px', top: 'auto', left: 'auto' }
+            };
+        case 'portrait-secondary': // Bottom edge
+            return {
+                left: { bottom: '-5px', right: '-5px', top: 'auto', left: 'auto' },
+                right: { bottom: '-5px', left: '-5px', top: 'auto', right: 'auto' }
+            };
+        case 'landscape-secondary': // Left edge
+            return {
+                left: { bottom: '-5px', left: '-5px', top: 'auto', right: 'auto' },
+                right: { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' }
+            };
+        default: // Fallback to top edge
+            return {
+                left: { top: '-5px', left: '-5px', right: 'auto', bottom: 'auto' },
+                right: { top: '-5px', right: '-5px', left: 'auto', bottom: 'auto' }
+            };
     }
 }
 
@@ -85,11 +105,15 @@ export default class Replay {
             // container.style.transform = `rotate(${rotation}deg)`; // No longer rotating container
         }
 
+        const positions = getIndicatorPositions(this.state.lastRequiredOrientation);
+
         if (requiredIndicator) {
             requiredIndicator.style.backgroundColor = getOrientationColor(this.state.lastRequiredOrientation);
+            Object.assign(requiredIndicator.style, positions.right);
         }
          if (currentIndicator) {
             currentIndicator.style.backgroundColor = getOrientationColor(this.state.lastCurrentOrientation);
+            Object.assign(currentIndicator.style, positions.left);
         }
 
         if (board) {
