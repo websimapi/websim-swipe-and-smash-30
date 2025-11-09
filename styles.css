@@ -253,6 +253,7 @@ h1 {
     border-radius: 10px;
     width: 100%;
     aspect-ratio: 1 / 1;
+    transition: border-color 0.3s ease;
 }
 
 .candy {
@@ -400,6 +401,7 @@ h1 {
     border-radius: 10px;
     width: 100%;
     aspect-ratio: 1 / 1;
+    transition: border-color 0.3s ease;
 }
 
 #replay-controls {
