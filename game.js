@@ -71,7 +71,8 @@ class Game {
         this.comboCount = 0;
         this.smashValue = config.initialSmashValue;
         this.smashProgress = 0; // 0, 0.5
-        this.orientationHandler = new OrientationHandler(document.getElementById('orientation-indicator'), this.onOrientationChange.bind(this));
+        this.orientationIndicator = document.getElementById('orientation-indicator');
+        this.orientationHandler = new OrientationHandler(this.orientationIndicator, this.onOrientationChange.bind(this));
         this.timer = new GameTimer(config.timerDuration, document.getElementById('timer'), this.onTimerEnd.bind(this));
         this.ui = new UI({ onStartGame: this.onStartGame.bind(this) });
         
@@ -84,7 +85,6 @@ class Game {
         this.requiredOrientation = 'portrait-primary';
         this.currentOrientation = null;
         this.requiredOrientationIndicator = document.getElementById('required-orientation-indicator');
-        this.orientationIndicator = document.getElementById('orientation-indicator');
         this.orientationRuleInterval = null;
 
         this.ui.updateScore(0);
