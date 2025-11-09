@@ -78,11 +78,17 @@ export default class InputHandler {
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
             // Adjust swipe vector for rotation
-            const rad = this.rotation * (Math.PI / 180); // angle in radians
+            const rad = -(this.rotation % 360) * (Math.PI / 180); // angle in radians, negated for correct transform
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
-            const adjustedDx = dx * cos + dy * sin;
-            const adjustedDy = -dx * sin + dy * cos;
+            const adjustedDx = dx * cos - dy * sin;
+            let adjustedDy = dx * sin + dy * cos;
+
+            if (this.rotation === 270) {
+                // Yellow mode: "left swipe for down", "right swipe for up".
+                // Default logic does the opposite, so we flip the vertical adjustment.
+                adjustedDy = -adjustedDy;
+            }
 
             // A swipe has been detected, determine direction
             let endRow, endCol;
