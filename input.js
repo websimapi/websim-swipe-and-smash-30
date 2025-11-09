@@ -78,12 +78,11 @@ export default class InputHandler {
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
             // Adjust swipe vector for rotation
-            const rad = (this.rotation % 360) * (Math.PI / 180); // angle in radians
+            const rad = this.rotation * (Math.PI / 180); // angle in radians
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
-            // This rotates the swipe vector by -rotation to align it with the grid's coordinate system.
             const adjustedDx = dx * cos + dy * sin;
-            const adjustedDy = dy * cos - dx * sin;
+            const adjustedDy = -dx * sin + dy * cos;
 
             // A swipe has been detected, determine direction
             let endRow, endCol;
