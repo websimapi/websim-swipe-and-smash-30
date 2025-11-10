@@ -254,6 +254,8 @@ export default class Replay {
                     await replayBoard.processMatches(false, null);
                 } else if (action.type === 'orientationChange') {
                     this.state.lastRequiredOrientation = action.orientation;
+                    const rotation = getOrientationRotation(action.orientation);
+                    replayBoard.setRotation(rotation);
                     this.updateReplayOrientation();
                 } else if (action.type === 'currentOrientationChange') {
                     this.state.lastCurrentOrientation = action.orientation;
