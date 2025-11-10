@@ -87,9 +87,13 @@ export default class Replay {
 
         if (requiredIndicator) {
             requiredIndicator.style.backgroundColor = getOrientationColor(this.state.lastRequiredOrientation);
+            const requiredPos = getIndicatorPosition(this.state.lastRequiredOrientation);
+            Object.assign(requiredIndicator.style, requiredPos);
         }
          if (currentIndicator) {
             currentIndicator.style.backgroundColor = getOrientationColor(this.state.lastCurrentOrientation);
+            const currentPos = getIndicatorPosition(this.state.lastCurrentOrientation);
+            Object.assign(currentIndicator.style, currentPos);
         }
 
         if (board) {
