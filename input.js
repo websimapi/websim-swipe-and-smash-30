@@ -77,30 +77,27 @@ export default class InputHandler {
         const swipeThreshold = 20; // Minimum pixels to be considered a swipe
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
-            // Adjust swipe vector for rotation
-            const rad = -(this.rotation % 360) * (Math.PI / 180); // angle in radians, negated for correct transform
-            const cos = Math.cos(rad);
-            const sin = Math.sin(rad);
-            const adjustedDx = dx * cos - dy * sin;
-            let adjustedDy = dx * sin + dy * cos;
-
-            if (this.rotation === 270) {
-                // Yellow mode: "left swipe for down", "right swipe for up".
-                // Default logic does the opposite, so we flip the vertical adjustment.
-                adjustedDy = -adjustedDy;
+            // Determine screen-based swipe direction
+            let screenDirection;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                screenDirection = dx > 0 ? 'right' : 'left';
+            } else {
+                screenDirection = dy > 0 ? 'down' : 'up';
             }
 
-            // A swipe has been detected, determine direction
+            // The board is always oriented upright to the user, so the screen direction
+            // is the same as the board direction.
+            const boardDirection = screenDirection;
+
             let endRow, endCol;
             const startRow = parseInt(this.startCandy.dataset.row);
             const startCol = parseInt(this.startCandy.dataset.col);
 
-            if (Math.abs(adjustedDx) > Math.abs(adjustedDy)) { // Horizontal swipe
-                endRow = startRow;
-                endCol = startCol + (adjustedDx > 0 ? 1 : -1);
-            } else { // Vertical swipe
-                endRow = startRow + (adjustedDy > 0 ? 1 : -1);
-                endCol = startCol;
+            switch (boardDirection) {
+                case 'up':    endRow = startRow - 1; endCol = startCol;     break;
+                case 'down':  endRow = startRow + 1; endCol = startCol;     break;
+                case 'left':  endRow = startRow;     endCol = startCol - 1; break;
+                case 'right': endRow = startRow;     endCol = startCol + 1; break;
             }
 
             // Find the candy at the target position
